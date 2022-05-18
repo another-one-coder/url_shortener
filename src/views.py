@@ -14,7 +14,7 @@ APP_URL = getenv("APP_URL")
 
 @template('index.html')
 async def index(request: Request) -> dict:
-    return {}
+    return {'app_url': APP_URL}
 
 
 # @template decorator is not used here, because it does not allow
@@ -31,11 +31,12 @@ async def form_handler(
     possible_url = await select_url(data['short_url'], test_db=test_db)
 
     if possible_url is not None:
-        return {'warn': 'Short URL exists. Try again.'}
+        return {'app_url': APP_URL, 'warn': 'Short URL exists. Try again.'}
 
     if not any(map(data['orig_url'].startswith,
                    (i + '://' for i in PROTOCOLS))):
-        return {'warn': 'Please specify the network protocol. ' +
+        return {'app_url': APP_URL,
+                'warn': 'Please specify the network protocol. ' +
                         f'For example: https://{data["orig_url"]}'}
 
     if str(data['short_url']) == '':
@@ -45,7 +46,7 @@ async def form_handler(
 
     await insert_new_url(data['orig_url'], short_url, test_db=test_db)
 
-    return {'short_url': f'{APP_URL}/' + short_url}
+    return {'app_url': APP_URL, 'short_url': f'{APP_URL}/' + short_url}
 
 
 async def redir(
