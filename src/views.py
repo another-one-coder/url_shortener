@@ -1,11 +1,15 @@
 from random import choices
 from string import ascii_letters, digits
+from os import getenv
 
 from aiohttp.web import Request, HTTPFound, HTTPNotFound
 from aiohttp_jinja2 import template
 
 from db import insert_new_url, select_url
 from from_yaml import PROTOCOLS
+
+
+APP_URL = getenv("APP_URL")
 
 
 @template('index.html')
@@ -41,7 +45,7 @@ async def form_handler(
 
     await insert_new_url(data['orig_url'], short_url, test_db=test_db)
 
-    return {'short_url': 'localhost:8080/' + short_url}
+    return {'short_url': f'{APP_URL}/' + short_url}
 
 
 async def redir(
