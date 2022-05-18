@@ -160,6 +160,7 @@ async def test_form_handler(
     from src.views import form_handler
     from src.db import select_url
     from init_db import create_table
+    from src.views import APP_URL
 
     test_config = prepare_db
 
@@ -182,7 +183,7 @@ async def test_form_handler(
     row = await select_url('test_short_url', test_db=test_config)
     assert row == 'https://www.google.com/'
     text = await response.text()
-    assert 'Your short URL: localhost:8080/test_short_url' in text
+    assert f'Your short URL: {APP_URL}/test_short_url' in text
 
     response: ClientResponse = await client.post('/', data={
         'short_url': 'test_short_url',
@@ -198,7 +199,7 @@ async def test_form_handler(
     })
     assert response.status == 200
     text = await response.text()
-    assert 'Your short URL: localhost:8080/' in text
+    assert f'Your short URL: {APP_URL}/' in text
 
     response: ClientResponse = await client.post('/', data={
         'short_url': '',
@@ -214,9 +215,7 @@ async def test_index(
     prepare_app,
     aiohttp_client: test_utils.TestClient
 ) -> None:
-
     from src.views import index
-    import os
 
     app: web.Application = prepare_app()
     app.router.add_get('/', index)
@@ -224,11 +223,6 @@ async def test_index(
     response = await client.get('/')
 
     assert response.status == 200
-
-    with open(os.path.normpath(os.path.abspath(__file__) +
-                               '/../test_data/index.html'), 'r') as f:
-        text = await response.text()
-        assert f.read() == text
 
 
 def test_setup_routes() -> None:
