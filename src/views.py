@@ -22,12 +22,9 @@ async def form_handler(
         *,
         test_db: dict[str, str] | None = None
 ) -> dict:
-
-    db = test_db if test_db else None
-
     data = await request.post()
 
-    possible_url = await select_url(data['short_url'], test_db=db)
+    possible_url = await select_url(data['short_url'], test_db=test_db)
 
     if possible_url is not None:
         return {'warn': 'Short URL exists. Try again.'}
@@ -42,7 +39,7 @@ async def form_handler(
     else:
         short_url = str(data['short_url'])
 
-    await insert_new_url(data['orig_url'], short_url, test_db=db)
+    await insert_new_url(data['orig_url'], short_url, test_db=test_db)
 
     return {'short_url': 'localhost:8080/' + short_url}
 
@@ -52,10 +49,7 @@ async def redir(
     *,
     test_db: dict[str, str] | None = None
 ) -> None:
-
-    db = test_db if test_db is not None else None
-
     url = str(request.rel_url)
     if url != '/favicon.ico':
-        orig_url = await select_url(url[1:], test_db=db)
+        orig_url = await select_url(url[1:], test_db=test_db)
         raise HTTPFound(orig_url) if orig_url is not None else HTTPNotFound()

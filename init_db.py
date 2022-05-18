@@ -1,3 +1,7 @@
+"""
+Module for creation the database for the application.
+"""
+
 from asyncpg import Connection, connect
 from asyncio import run
 
