@@ -8,6 +8,8 @@ form_handler = template('index.html')(form_handler)
 
 
 def setup_routes(app: Application) -> None:
+    """The function registers handlers."""
+
     app.router.add_get('/', index, name='index')
     app.router.add_post('/', form_handler, name='form_handler')
     app.router.add_get(r'/{name:.+}', redir, name='redir')

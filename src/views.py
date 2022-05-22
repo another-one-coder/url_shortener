@@ -1,3 +1,5 @@
+"""Module with request handler."""
+
 from random import choices
 from string import ascii_letters, digits
 from os import getenv
@@ -14,6 +16,8 @@ APP_URL = getenv("APP_URL")
 
 @template('index.html')
 async def index(request: Request) -> dict:
+    """Return dict for the template of the main page of the site"""
+
     return {'app_url': APP_URL}
 
 
@@ -26,6 +30,12 @@ async def form_handler(
         *,
         test_db: dict[str, str] | None = None
 ) -> dict:
+    """
+    Processes form data to create a new short url.  If the "short url"
+    field of response is empty, creates a random string for it.  If
+    specified short url exists, returns data for "Try again" template.
+    """
+
     data = await request.post()
 
     possible_url = await select_url(data['short_url'], test_db=test_db)
@@ -54,6 +64,11 @@ async def redir(
     *,
     test_db: dict[str, str] | None = None
 ) -> None:
+    """
+    The function redirects the user to the page found in the database
+    or to 404 page.
+    """
+
     url = str(request.rel_url)
     if url != '/favicon.ico':
         orig_url = await select_url(url[1:], test_db=test_db)

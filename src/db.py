@@ -1,3 +1,5 @@
+"""The module is responsible for interacting with the database."""
+
 from os import getenv
 
 from asyncpg import Connection, connect

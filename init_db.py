@@ -1,5 +1,7 @@
 """
 Module for creation the database for the application.
+But beacause the application runs on heroku, it is used only to create
+test databases on local machine.
 """
 
 from asyncpg import Connection, connect
@@ -15,6 +17,7 @@ async def setup_db(
     *,
     test_db: dict | None = None
 ) -> None:
+    """The function that creates a database.  Uses admin DSN."""
 
     db = test_db if test_db else DATABASE_CONFIG['postgres']
 
@@ -30,6 +33,10 @@ async def setup_db(
 
 
 async def create_table(*, test_db: dict | None = None) -> None:
+    """
+    The function that creates the table in the database
+    for storing short and original URLs.
+    """
 
     db = test_db if test_db else DATABASE_CONFIG['postgres']
 

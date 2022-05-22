@@ -1,3 +1,14 @@
+"""
+Module for testing:
+db.connect_db
+db.insert_new_url
+db.select_url
+views.index
+views.form_handler
+views.redir
+routes.setup_routes .
+"""
+
 import sys
 import os
 

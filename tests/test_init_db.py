@@ -1,3 +1,5 @@
+"""Module for testing init_db.setup_db and init_db.create_table."""
+
 import sys
 import os
 
